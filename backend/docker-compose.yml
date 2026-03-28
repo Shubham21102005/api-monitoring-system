@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  # 1. MongoDB - The Data Store
+  mongodb:
+    image: mongo:latest
+    container_name: watchtower-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Redis - The BullMQ Engine
+  redis:
+    image: redis:alpine
+    container_name: watchtower-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. Mongo-Express - GUI for MongoDB (http://localhost:8081)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: watchtower-mongo-gui
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_BASICAUTH=false
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  # 4. Redis Insight - The best GUI for Redis/BullMQ (http://localhost:8001)
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: watchtower-redis-gui
+    ports:
+      - "8001:8001"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # 5. API Server (Placeholder - Run 'npm run dev' locally first,
+  # but here is the config for later)
+  # api:
+  #   build: ./server
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - MONGO_URI=mongodb://mongodb:27017/watchtower
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+
+volumes:
+  mongo_data:
