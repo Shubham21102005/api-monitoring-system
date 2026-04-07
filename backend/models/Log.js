@@ -41,9 +41,12 @@ const LogSchema = new Mongoose.Schema(
     runAt: {
       type: Date,
       default: Date.now,
+      index: true,
     },
   },
   { timestamps: true },
 );
+
+LogSchema.index({ runAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 }); // auto delete log after 30days
 
 module.exports = Mongoose.model("Log", LogSchema);

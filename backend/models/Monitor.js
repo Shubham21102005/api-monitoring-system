@@ -34,6 +34,7 @@ const MonitorSchema = new mongoose.Schema(
     },
     schedule: {
       interval: Number, //in sec
+      cron: String,
     },
     timeoutMS: {
       type: Number,
@@ -45,6 +46,7 @@ const MonitorSchema = new mongoose.Schema(
     },
     expectedResponse: {
       statusCode: Number,
+      bodyContains: String, //simple string match in response can be optional feature
     },
     status: {
       type: String,
