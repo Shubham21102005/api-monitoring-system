@@ -13,3 +13,7 @@ There will also be retry logic. If a request sends 400 or 401 or 500, we will r
 For that, NodeMailer will be used or resend. 
 
 For the first step, models will have to be created. 
+
+created 3 models, a few more can be created when expanding upon the project
+
+next step will be creating user controllers and routes, user will provide simple name email password for sign up and register, standard jwt middle ware will be used and bcrypt for hashing . just crud routes register, login and auth middleware can just be copied from an older project. 
