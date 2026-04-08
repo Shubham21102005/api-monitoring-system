@@ -17,3 +17,6 @@ For the first step, models will have to be created. 
 created 3 models, a few more can be created when expanding upon the project
 
 next step will be creating user controllers and routes, user will provide simple name email password for sign up and register, standard jwt middle ware will be used and bcrypt for hashing . just crud routes register, login and auth middleware can just be copied from an older project. 
+
+finished user routes, gotta test next time i continue. : DONE
+Login and register routes are working!! test email is johndoe@email.com and 12345678 is password
