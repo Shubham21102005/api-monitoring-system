@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const MonitorSchema = new mongoose.Schema(
   {
-    userId: {
+    userId: { 
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
