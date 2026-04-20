@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const userRoutes = require('./routes/userRoutes')
-
+const monitorRoutes = require('./routes/monitorRoutes')
 const app = express();
 
 // Middleware
@@ -12,8 +12,8 @@ app.use(express.json());
 
 
 app.use('/api/users', userRoutes)
-
-
+app.use('/api/monitors', monitorRoutes)
+ 
 //connect db
 const connectDB = async () => { 
   try {
