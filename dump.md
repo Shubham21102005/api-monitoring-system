@@ -20,3 +20,14 @@ next step will be creating user controllers and routes, user will provide simple
 
 finished user routes, gotta test next time i continue. : DONE
 Login and register routes are working!! test email is johndoe@email.com and 12345678 is password
+
+The controllers are now done. The next step should be to monitor controllers. For now, with only the current ones that are here, the monitor can:
+- Get all monitors
+- Get a single monitor
+- Update a monitor
+- Delete a monitor
+
+Also, for the latest check, make sure that the updates or the deletes are actually being synced with BullMQ. 
+The monitor of the protector takes a name, URL, method, headers, body, and query parameters, as well as a timeout and an expected response. Which one of these should be optional? 
+
+

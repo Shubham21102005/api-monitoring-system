@@ -74,7 +74,7 @@ const deleteMonitor = async (req,res)=>{
 
         
         if(!monitorId){
-            return res.status(401).json({message: "Monitor ID is missing. "})
+            return res.status(400).json({message: "Monitor ID is missing. "})
         }
         
         const foundMonitor = await monitor.findOneAndDelete({_id: monitorId, userId});
@@ -106,7 +106,7 @@ const updateMonitor = async (req,res)=>{
 
        
         if(!monitorId){
-            return res.status(401).json({message: "Monitor ID is missing. "})
+            return res.status(400).json({message: "Monitor ID is missing. "})
         }
 
         const foundMonitor = await monitor.findOne({_id: monitorId, userId});
