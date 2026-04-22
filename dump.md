@@ -31,3 +31,7 @@ Also, for the latest check, make sure that the updates or the deletes are actual
 The monitor of the protector takes a name, URL, method, headers, body, and query parameters, as well as a timeout and an expected response. Which one of these should be optional? 
 
 
+Okay, so now since the scaffold for the operation of monitor has been made and the user auth routes are also complete, I believe the next step should be to handle the main service, which is the job creation, workers creation. For that, I will have to read or study how exactly it works, what the syntax is like, and stuff like that. 
+
+I have to set up the boolean queue. Firstly, I need a method—a function that will actually make the call to the API. I will use Axios and pass the URL, method, headers, body, query parameters, and maybe a timeout. This can fetch the response; from that response I can add a check to determine whether it was a success or failure. The function will be independent, so in the front end I can also add a check. 
+
