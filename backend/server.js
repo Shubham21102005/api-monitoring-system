@@ -5,6 +5,7 @@ require("dotenv").config();
 const userRoutes = require('./routes/userRoutes')
 const monitorRoutes = require('./routes/monitorRoutes')
 const checkAPI = require('./services/checkAPI')
+require('./workers/monitorWorker')
 const app = express();
 
 // Middleware

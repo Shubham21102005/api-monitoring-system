@@ -1,4 +1,5 @@
 const monitor = require('../models/Monitor')
+const monitorQueue = require('../queues/monitorQueue')
 
 
 const create = async (req,res)=>{
@@ -13,6 +14,19 @@ const create = async (req,res)=>{
         }
 
         const newMonitor = await monitor.create({name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, userId})
+
+        if(newMonitor.status === 'active' && (newMonitor.schedule?.cron || newMonitor.schedule?.interval)){
+            await monitorQueue.upsertJobScheduler(
+                newMonitor._id.toString(),
+                newMonitor.schedule.cron
+                    ? {pattern: newMonitor.schedule.cron}
+                    : {every: newMonitor.schedule.interval * 1000},
+                {
+                    name: 'check',
+                    data: {monitorId: newMonitor._id.toString()},
+                }
+            )
+        }
 
         return res.status(201).json({message: "Monitor created successfully", monitor: newMonitor})
 
@@ -84,6 +98,8 @@ const deleteMonitor = async (req,res)=>{
         }
 
 
+        await monitorQueue.removeJobScheduler(monitorId)
+
         return res.status(200).json({message: "Monitor deleted successfully"})
         
         
@@ -118,7 +134,22 @@ const updateMonitor = async (req,res)=>{
 
 
         const updatedMonitor = await monitor.findOneAndUpdate({_id: monitorId}, {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse},  {new: true});
-        
+
+        if(updatedMonitor.status === 'active' && (updatedMonitor.schedule?.cron || updatedMonitor.schedule?.interval)){
+            await monitorQueue.upsertJobScheduler(
+                updatedMonitor._id.toString(),
+                updatedMonitor.schedule.cron
+                    ? {pattern: updatedMonitor.schedule.cron}
+                    : {every: updatedMonitor.schedule.interval * 1000},
+                {
+                    name: 'check',
+                    data: {monitorId: updatedMonitor._id.toString()},
+                }
+            )
+        }else{
+            await monitorQueue.removeJobScheduler(updatedMonitor._id.toString())
+        }
+
         return res.status(200).json({updatedMonitor});
         
     }catch(error){
