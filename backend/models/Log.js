@@ -35,7 +35,7 @@ const LogSchema = new Mongoose.Schema(
     success: Boolean,
     error: {
       message: String,
-      code: Number,
+      code: String,
       stack: String,
     },
     runAt: {
