@@ -328,37 +328,3 @@ The logs page maintains a `<Set>` of expanded log IDs and polls the logs endpoin
 
 Things that exist but aren't polished, and things that don't exist yet.
 
-### Important
-
-- **Alert state-transition gating.** Currently every failed check fires an email. A monitor that goes down for 30 minutes at a 60s interval = 30 emails. Should only alert on `healthy → failing` transitions, plus optional "RESOLVED" email on `failing → healthy`.
-- **Real uptime / success-rate aggregation.** The dashboard's `99.9%` placeholder and the logs page's stats both compute over loaded data only. Add `GET /api/monitors/:id/stats` aggregating Logs over 24h / 7d / 30d windows.
-- **Tighten error responses.** Mongoose `ValidationError` and `CastError` should map to HTTP 400 with the underlying message instead of every error becoming a generic 500.
-
-### Production hardening
-
-- CORS allowlist (currently wide open).
-- Rate limit on `/login` (brute-force protection).
-- Server-side password length / format validation.
-- Worker SIGTERM handler so in-flight jobs finish on shutdown.
-- Response body size cap in `checkAPI` so a 10 MB target doesn't balloon Mongo.
-- Email verification on register.
-
-### Polish
-
-- Extract `Field` component (currently duplicated across Login, Register, MonitorForm).
-- `<RequireAuth>` wrapper to consolidate the per-page redirect-if-no-token pattern.
-- Cron-schedule editor on the monitor form (interval-only today).
-- Mobile responsiveness pass on Dashboard and Logs.
-- Replace hardcoded `STATUS_BAR` numbers in the layout with real ones.
-
----
-
-## Acknowledgements
-
-- [BullMQ](https://docs.bullmq.io/) for the job queue and scheduler.
-- [Resend](https://resend.com/) for the email API.
-- [Tailwind CSS](https://tailwindcss.com/) for the design primitives.
-- The [frontend-design](https://skills.sh/anthropics/skills/frontend-design) and [vercel-react-best-practices](https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices) skills for the aesthetic and React rules.
-
----
-
