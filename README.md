@@ -331,9 +331,7 @@ Things that exist but aren't polished, and things that don't exist yet.
 ### Important
 
 - **Alert state-transition gating.** Currently every failed check fires an email. A monitor that goes down for 30 minutes at a 60s interval = 30 emails. Should only alert on `healthy → failing` transitions, plus optional "RESOLVED" email on `failing → healthy`.
-- **Frontend API URL config.** `http://localhost:5000` is hardcoded in every page component. Extract to `VITE_API_URL` and a shared axios instance with a request interceptor that attaches the bearer token automatically.
 - **Real uptime / success-rate aggregation.** The dashboard's `99.9%` placeholder and the logs page's stats both compute over loaded data only. Add `GET /api/monitors/:id/stats` aggregating Logs over 24h / 7d / 30d windows.
-- **Forgot password flow.** Users who forget their password are currently locked out forever.
 - **Tighten error responses.** Mongoose `ValidationError` and `CastError` should map to HTTP 400 with the underlying message instead of every error becoming a generic 500.
 
 ### Production hardening
@@ -364,6 +362,3 @@ Things that exist but aren't polished, and things that don't exist yet.
 
 ---
 
-## License
-
-MIT (or whatever you decide).
