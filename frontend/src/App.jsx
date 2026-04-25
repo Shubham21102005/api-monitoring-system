@@ -4,7 +4,7 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
-import CreateMonitor from './pages/CreateMonitor'
+import MonitorForm from './pages/MonitorForm'
 
 function App() {
   return (
@@ -15,7 +15,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/monitors/new" element={<CreateMonitor />} />
+          <Route path="/monitors/new" element={<MonitorForm />} />
+          <Route path="/monitors/edit/:id" element={<MonitorForm />} />
         </Route>
       </Routes>
     </BrowserRouter>
