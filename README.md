@@ -4,7 +4,9 @@
 
 Watchtower lets you point at any HTTP endpoint, schedule recurring checks against it, assert on status codes or response body content, and get an email the moment something actually breaks. Every check is persisted with full request/response bodies so you can drill into a failure post-hoc.
 
-[Landing page](docs/screenshots/landing.png)
+<p align="center">
+  <img src="docs/screenshots/landing.png" alt="Watchtower landing page" />
+</p>
 
 ---
 
