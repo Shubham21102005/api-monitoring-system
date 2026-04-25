@@ -15,6 +15,7 @@ const INITIAL_FORM = {
   retries: '',
   statusCode: '',
   bodyContains: '',
+  alertEmail: '',
 }
 
 function Field({label, type, value, onChange, placeholder, required = true, min}) {
@@ -173,6 +174,7 @@ function MonitorForm() {
           retries: m.retries !== undefined ? String(m.retries) : '',
           statusCode: m.expectedResponse?.statusCode ? String(m.expectedResponse.statusCode) : '',
           bodyContains: m.expectedResponse?.bodyContains || '',
+          alertEmail: m.alertEmail || '',
         })
         setHeaders(toKvRows(m.headers))
         setQueryParams(toKvRows(m.queryParams))
@@ -217,6 +219,8 @@ function MonitorForm() {
     if (form.statusCode) expected.statusCode = parseInt(form.statusCode, 10)
     if (form.bodyContains) expected.bodyContains = form.bodyContains
     if (Object.keys(expected).length > 0) payload.expectedResponse = expected
+
+    payload.alertEmail = form.alertEmail.trim() || null
 
     const headersObj = {}
     headers.forEach((h) => {
@@ -332,6 +336,21 @@ function MonitorForm() {
               <Field label="expected_status" type="number" value={form.statusCode} onChange={update('statusCode')} placeholder="200" required={false} min="100" />
               <Field label="body_contains" type="text" value={form.bodyContains} onChange={update('bodyContains')} placeholder='e.g. "success"' required={false} />
             </div>
+          </div>
+
+          <div>
+            <SectionHeader label="alerts.notification" optional />
+            <Field
+              label="send_alert_on_failure"
+              type="email"
+              value={form.alertEmail}
+              onChange={update('alertEmail')}
+              placeholder="oncall@yourdomain.com"
+              required={false}
+            />
+            <span className="text-[10px] text-zinc-700 tracking-wider mt-2 block">
+              // leave blank to disable. set an address to receive an email each time the monitor fails a check.
+            </span>
           </div>
 
           {error ? (

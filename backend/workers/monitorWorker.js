@@ -3,6 +3,7 @@ const connection = require('../config/redis')
 const Monitor = require('../models/Monitor')
 const Log = require('../models/Log')
 const checkAPI = require('../services/checkAPI')
+const sendEmail = require('../services/sendEmail')
 
 const processJob = async (job) => {
     const {monitorId} = job.data
@@ -54,6 +55,10 @@ const processJob = async (job) => {
     })
 
     await Monitor.findByIdAndUpdate(monitor._id, {lastRunAt: new Date()})
+
+    if(!result.success && monitor.alertEmail){
+        await sendEmail(monitor, result)
+    }
 
     return result
 }

@@ -7,15 +7,15 @@ const {scheduleMonitor} = require('../services/monitorScheduler')
 const create = async (req,res)=>{
     try {
 
-        const {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse} = req.body
+        const {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, alertEmail} = req.body
         const userId = req.user._id
 
-        
+
         if(!name || !url || !method){
             return res.status(400).json({message: "All fields are required"})
         }
 
-        const newMonitor = await monitor.create({name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, userId})
+        const newMonitor = await monitor.create({name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, alertEmail, userId})
 
         if(newMonitor.status === 'active' && (newMonitor.schedule?.cron || newMonitor.schedule?.interval)){
             await monitorQueue.upsertJobScheduler(
@@ -117,7 +117,7 @@ const updateMonitor = async (req,res)=>{
         const userId = req.user._id;
         const monitorId = req.params.id;
 
-        const {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, status} = req.body;
+        const {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, status, alertEmail} = req.body;
         if(!name || !url || !method){
             return res.status(400).json({message: "All fields are required"})
         }
@@ -135,7 +135,7 @@ const updateMonitor = async (req,res)=>{
         
 
 
-        const updatedMonitor = await monitor.findOneAndUpdate({_id: monitorId}, {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, status},  {new: true});
+        const updatedMonitor = await monitor.findOneAndUpdate({_id: monitorId}, {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, status, alertEmail},  {new: true});
 
         await scheduleMonitor(updatedMonitor)
 

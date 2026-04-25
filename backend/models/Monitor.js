@@ -53,6 +53,10 @@ const MonitorSchema = new mongoose.Schema(
       enum: ["active", "paused"],
       default: "active",
     },
+    alertEmail: {
+      type: String,
+      default: null,
+    },
     lastRunAt: Date,
     nextRunAt: Date,
   },
