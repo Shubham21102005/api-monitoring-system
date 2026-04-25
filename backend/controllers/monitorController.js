@@ -157,7 +157,7 @@ const getMonitorLogs = async (req,res)=>{
         const userId = req.user._id;
         const monitorId = req.params.id;
         const limit = Math.min(parseInt(req.query.limit) || 50, 200);
-        const skip = parseInt(req.query.skip) || 0;
+        const skip = parseInt(req.query.skip) || 0; //for pagination
 
         if(!monitorId){
             return res.status(400).json({message: "Monitor ID is missing."})
