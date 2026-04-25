@@ -40,10 +40,13 @@ function MonitorRow({m, onPauseToggle, onDelete, pendingDelete, onRequestDelete}
       <div className="col-span-1">
         <StatusDot status={m.status} />
       </div>
-      <div className="col-span-3 truncate">
-        <div className="text-sm text-zinc-100 font-bold tracking-wider truncate">{m.name}</div>
+      <Link
+        to={`/monitors/${m._id}/logs`}
+        className="col-span-3 truncate group/name"
+      >
+        <div className="text-sm text-zinc-100 font-bold tracking-wider truncate group-hover/name:opacity-70 transition-opacity">{m.name}</div>
         <div className="text-[11px] text-zinc-600 mt-0.5 uppercase tracking-wider">{m.method}</div>
-      </div>
+      </Link>
       <div className="col-span-3 text-[12px] text-zinc-400 truncate">{m.url}</div>
       <div className="col-span-1 text-[11px] text-zinc-500 tracking-wider">{interval}</div>
       <div className="col-span-1 text-[11px] text-zinc-500 truncate">{ago(m.lastRunAt)}</div>

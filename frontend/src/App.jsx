@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import MonitorForm from './pages/MonitorForm'
+import MonitorLogs from './pages/MonitorLogs'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/monitors/new" element={<MonitorForm />} />
           <Route path="/monitors/edit/:id" element={<MonitorForm />} />
+          <Route path="/monitors/:id/logs" element={<MonitorLogs />} />
         </Route>
       </Routes>
     </BrowserRouter>
