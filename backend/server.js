@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes')
 const monitorRoutes = require('./routes/monitorRoutes')
 const checkAPI = require('./services/checkAPI')
 require('./workers/monitorWorker')
+const {reconcileMonitors} = require('./services/monitorScheduler')
 const app = express();
 
 // Middleware
@@ -34,5 +35,6 @@ const connectDB = async () => {
 
 app.listen(process.env.PORT, async () => {
   await connectDB();
+  await reconcileMonitors();
   console.log(`Server running on port ${process.env.PORT}`);
 });

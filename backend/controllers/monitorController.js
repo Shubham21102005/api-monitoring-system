@@ -1,5 +1,6 @@
 const monitor = require('../models/Monitor')
 const monitorQueue = require('../queues/monitorQueue')
+const {scheduleMonitor} = require('../services/monitorScheduler')
 
 
 const create = async (req,res)=>{
@@ -115,7 +116,7 @@ const updateMonitor = async (req,res)=>{
         const userId = req.user._id;
         const monitorId = req.params.id;
 
-        const {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse} = req.body;
+        const {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, status} = req.body;
         if(!name || !url || !method){
             return res.status(400).json({message: "All fields are required"})
         }
@@ -133,22 +134,9 @@ const updateMonitor = async (req,res)=>{
         
 
 
-        const updatedMonitor = await monitor.findOneAndUpdate({_id: monitorId}, {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse},  {new: true});
+        const updatedMonitor = await monitor.findOneAndUpdate({_id: monitorId}, {name, url, method, headers, body, queryParams, schedule, timeoutMS, retries, expectedResponse, status},  {new: true});
 
-        if(updatedMonitor.status === 'active' && (updatedMonitor.schedule?.cron || updatedMonitor.schedule?.interval)){
-            await monitorQueue.upsertJobScheduler(
-                updatedMonitor._id.toString(),
-                updatedMonitor.schedule.cron
-                    ? {pattern: updatedMonitor.schedule.cron}
-                    : {every: updatedMonitor.schedule.interval * 1000},
-                {
-                    name: 'check',
-                    data: {monitorId: updatedMonitor._id.toString()},
-                }
-            )
-        }else{
-            await monitorQueue.removeJobScheduler(updatedMonitor._id.toString())
-        }
+        await scheduleMonitor(updatedMonitor)
 
         return res.status(200).json({updatedMonitor});
         
