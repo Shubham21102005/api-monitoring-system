@@ -15,15 +15,21 @@ const processJob = async (job) => {
         return {skipped: true, reason: 'monitor_paused'}
     }
 
-    const result = await checkAPI(
-        monitor.url,
-        monitor.method,
-        monitor.headers,
-        monitor.body,
-        monitor.queryParams,
-        monitor.timeoutMS,
-        monitor.expectedResponse,
-    )
+    const maxAttempts = (monitor.retries || 0) + 1
+    let result
+    for(let attempt = 1; attempt <= maxAttempts; attempt++){
+        result = await checkAPI(
+            monitor.url,
+            monitor.method,
+            monitor.headers,
+            monitor.body,
+            monitor.queryParams,
+            monitor.timeoutMS,
+            monitor.expectedResponse,
+        )
+        if(result.success) break
+        if(attempt < maxAttempts) await new Promise(r => setTimeout(r, 500))
+    }
 
     await Log.create({
         monitorId: monitor._id,

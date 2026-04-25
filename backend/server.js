@@ -4,7 +4,6 @@ const cors = require("cors");
 require("dotenv").config();
 const userRoutes = require('./routes/userRoutes')
 const monitorRoutes = require('./routes/monitorRoutes')
-const checkAPI = require('./services/checkAPI')
 require('./workers/monitorWorker')
 const {reconcileMonitors} = require('./services/monitorScheduler')
 const app = express();
@@ -16,12 +15,8 @@ app.use(express.json());
 
 app.use('/api/users', userRoutes)
 app.use('/api/monitors', monitorRoutes)
-app.post('/', async (req, res) => {
-  const { url, method, headers, body, queryParams, timeoutMS, expectedResponse } = req.body;
-  const result = await checkAPI(url, method, headers, body, queryParams, timeoutMS, expectedResponse);
-  res.json(result);
-});
- 
+
+
 //connect db
 const connectDB = async () => { 
   try {

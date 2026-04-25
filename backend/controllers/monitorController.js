@@ -1,4 +1,5 @@
 const monitor = require('../models/Monitor')
+const Log = require('../models/Log')
 const monitorQueue = require('../queues/monitorQueue')
 const {scheduleMonitor} = require('../services/monitorScheduler')
 
@@ -151,11 +152,42 @@ const updateMonitor = async (req,res)=>{
 
 
 
+const getMonitorLogs = async (req,res)=>{
+    try{
+        const userId = req.user._id;
+        const monitorId = req.params.id;
+        const limit = Math.min(parseInt(req.query.limit) || 50, 200);
+        const skip = parseInt(req.query.skip) || 0;
+
+        if(!monitorId){
+            return res.status(400).json({message: "Monitor ID is missing."})
+        }
+
+        const ownedMonitor = await monitor.findOne({_id: monitorId, userId});
+        if(!ownedMonitor){
+            return res.status(404).json({message: "Monitor doesnt exist."})
+        }
+
+        const logs = await Log.find({monitorId})
+            .sort({runAt: -1})
+            .skip(skip)
+            .limit(limit);
+
+        return res.status(200).json({logs});
+
+    }catch(error){
+        console.log(error)
+        res.status(500).json({message: "Internal Server Error"})
+    }
+}
+
+
 module.exports = {
     create,
     getAllMonitors,
     getMonitor,
     deleteMonitor,
-    updateMonitor
+    updateMonitor,
+    getMonitorLogs
 }
 
